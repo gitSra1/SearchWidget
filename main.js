@@ -1,4 +1,4 @@
-const { app, BrowserWindow, globalShortcut } = require('electron');
+const { app, BrowserWindow, globalShortcut, ipcMain } = require('electron');
 const path = require('path'); 
 
 let widgetVisible = false;
@@ -25,12 +25,17 @@ function createWindow() {
       const { screen } = require('electron');
       const display = screen.getPrimaryDisplay();
       const x = display.bounds.width - win.getBounds().width;
-      const y = 200; 
+      const y = 240; 
       win.setPosition(x, y);
       win.show();
     } else {
       win.hide();
     }
+  });
+
+  ipcMain.on('resize-window', (event, targetHeight) => {
+    const win = BrowserWindow.getFocusedWindow(); 
+    win.setSize(400, targetHeight);
   });
 }
 

@@ -1,14 +1,42 @@
 body {
     margin: 0; 
+    overflow-y: hidden;
+    overflow-x: hidden;
   }
   
   #search-bar {
     width: 100%; 
+    height: 2rem;
     padding: 10px;
-    background-color: aqua;
+    background-color: rgb(12, 2, 21);
+    opacity: 1;
+    color: aliceblue;
+  
+
   }
   
   #results {
     padding: 10px;
   } 
   
+
+  #search-bar {
+  width: 100%; /* Adjust the width as needed */
+  padding: 10px 15px;
+  border: 1px solid #000000; /* Light gray border */
+  border-radius: 4px;
+  font-size: 16px;
+  font-style: italic;
+  font-weight: bolder;
+}
+
+#search-bar:focus { 
+  outline: none; /* Remove default focus outline */
+  box-shadow: 0 0 5px rgba(12, 12, 129, 0.5); /* Example of a focus effect */
+}
+
+
+#results { 
+  overflow-y: hidden; /* Hide vertical scrollbar */
+  overflow-x: hidden;
+}
