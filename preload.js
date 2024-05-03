@@ -52,7 +52,6 @@ window.addEventListener('DOMContentLoaded', () => {
         resultsDiv.innerHTML = 'An error occurred.'; 
         console.error('Search Error:', error); 
       });
-      
 
   }
   
