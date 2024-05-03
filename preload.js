@@ -12,6 +12,20 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Home') { 
+        document.getElementById('results').innerHTML = ''; 
+        document.getElementById('search-bar').value = ''; 
+        currentQuery = '';
+        reduceWidgetSize();// Reset widget height if needed
+        // Optionally hide the back button as well:
+        // document.getElementById('back-button').style.display = 'none'; 
+    }
+});
+
+
+
+
   function displaySearchResults(query) {
     const resultsDiv = document.getElementById('results');
     resultsDiv.innerHTML = 'Loading...';
@@ -24,8 +38,9 @@ window.addEventListener('DOMContentLoaded', () => {
           data.items.forEach(item => {
             const resultItem = document.createElement('div');
             resultItem.innerHTML = `<a href="${item.link}">${item.title}</a>`; 
+            
             resultsDiv.appendChild(resultItem);
-
+            console.log('jai')
             widgetHeight += resultItem.offsetHeight;
             resizeWidget();
           });
@@ -37,46 +52,31 @@ window.addEventListener('DOMContentLoaded', () => {
         resultsDiv.innerHTML = 'An error occurred.'; 
         console.error('Search Error:', error); 
       });
+      
+
   }
+  
 
   function resizeWidget() {
-    const targetHeight = Math.min(widgetHeight, 550); // Cap height at 550
+    const targetHeight = Math.min(widgetHeight, 550);
     const { ipcRenderer } = require('electron');
     ipcRenderer.send('resize-window', targetHeight); 
   }
 
-   // Back Button and External Link Handling
+  function reduceWidgetSize() {
+    const targetHeight = Math.min(widgetHeight, 50);
+    const { ipcRenderer } = require('electron');
+    ipcRenderer.send('resize-window', targetHeight); 
+  }
+
+
    const { ipcRenderer } = require('electron');
-   let externalWindow = null; // Initialize externalWindow
- 
-   ipcRenderer.on('toggle-back-button', (event, visibility) => {
-     const backButton = document.getElementById('back-button');
-     backButton.style.display = visibility ? 'block' : 'none'; 
-   });
+   let externalWindow = null; 
  
    ipcRenderer.on('link-opened', () => {
      if (externalWindow === null) { 
        externalWindow = new BrowserWindow({ show: false });
      }
-     externalWindow.loadURL(item.link); // Load the link sent from preload.js
-   });
- 
-   externalWindow.webContents.on('did-navigate', () => {
-     externalWindow.show();
-     const mainWindow = BrowserWindow.getFocusedWindow();
-     mainWindow.webContents.send('toggle-back-button', externalWindow.webContents.canGoBack());
-   });
- 
-   externalWindow.webContents.on('will-navigate', (event, url) => {
-     event.preventDefault();
-     mainWindow.webContents.send('toggle-back-button', externalWindow.webContents.canGoBack());
-   });
- 
-   ipcMain.on('back-to-search', () => {
-     if (externalWindow) externalWindow.close(); 
-     externalWindow = null; // Reset
-     const mainWindow = BrowserWindow.getFocusedWindow();
-     mainWindow.show();
-     mainWindow.focus();
+     externalWindow.loadURL(item.link); 
    });
 });
